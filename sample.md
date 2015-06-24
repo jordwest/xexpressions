@@ -12,7 +12,7 @@ Regular Expression
 X-Expression
 ------------
 
-	XExpression[Private]: Byte
+	Alias: Byte
 		Select:
 			Case: 250 or more
 				'25[0-5]'
@@ -36,7 +36,6 @@ X-Expression
 			Byte
 		Word Boundary
 
-
 Matching a date
 ===============
 
@@ -48,7 +47,7 @@ Regular Expression
 X-Expression
 ------------
 
-	XExpression[Private]: Separator
+	Alias: Separator
 		'[- /.]'
 
 	XExpression: Date
