@@ -6,7 +6,7 @@ type ASTNode struct {
 	parent   *ASTNode
 	children []*ASTNode
 	command  Command
-	line     Line // Keep track of the original line for later errors
+	line     Line // Keep track of the original line for later error reporting
 	order    int
 }
 
