@@ -6,9 +6,7 @@ var regular_expressions = {};
 {{range .RegularExpressions}}
 /** {{.TextName}}
   * ---------
-  *
   * {{.Description}}
   */
 regular_expressions['{{.TextName}}'] = /{{.RegexpText}}/;
-
 {{end}}
