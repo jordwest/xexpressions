@@ -16,6 +16,7 @@ type Regexp struct {
 	RegexpText    string         // The compiled text for the regular expression
 	CaptureGroups []CaptureGroup // A list of the named capture groups in the regular expression
 	Examples      []Example      // A list of the examples for this regexp
+	Source        string         // The location of the original definition
 }
 
 func NewRegexp() Regexp {

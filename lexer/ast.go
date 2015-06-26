@@ -33,10 +33,10 @@ func (n *ASTNode) Include(node *ASTNode) {
 	n.children = append(n.children, node.children...)
 }
 
-func (n *ASTNode) Command() Command     { return n.command }
-func (n *ASTNode) Line() Line           { return n.line }
-func (n *ASTNode) Children() []*ASTNode { return n.children }
-func (n *ASTNode) Parent() *ASTNode     { return n.parent }
+func (n ASTNode) Command() Command     { return n.command }
+func (n ASTNode) Line() Line           { return n.line }
+func (n ASTNode) Children() []*ASTNode { return n.children }
+func (n ASTNode) Parent() *ASTNode     { return n.parent }
 
 func (n *ASTNode) DebugPrint(prependLine string) {
 	if n.parent == nil {

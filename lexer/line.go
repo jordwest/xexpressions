@@ -49,7 +49,7 @@ func LinesFromText(text string, filename string) []Line {
 	return lines
 }
 
-func (l *Line) String() string {
+func (l Line) String() string {
 	return fmt.Sprintf("line %d of %s", l.lineNumber, l.filename)
 }
 

@@ -4,9 +4,11 @@
 var regular_expressions = {};
 
 {{range .RegularExpressions}}
-/** {{.TextName}}
+/**
+  * {{.TextName}}
   * ---------
   * {{.Description}}
+  * Definition: {{.Source}}
   */
 regular_expressions['{{.TextName}}'] = /{{.RegexpText}}/;
 {{end}}

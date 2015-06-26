@@ -59,6 +59,7 @@ func CompileExpression(node lexer.ASTNode, scope Scope) (regexp Regexp, parentSc
 
 	// The name of the regexp is the comment on the XExpression command
 	scope.CurrentRegexp.TextName = node.Command().Comment
+	scope.CurrentRegexp.Source = node.Line().String()
 
 	// Run tests on the examples
 	for _, example := range scope.CurrentRegexp.Examples {
