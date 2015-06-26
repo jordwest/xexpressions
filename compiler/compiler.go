@@ -71,8 +71,6 @@ func CompileExpression(node lexer.ASTNode, scope Scope) (regexp Regexp, parentSc
 
 	scope.CurrentRegexp.RegexpText = output
 
-	scope.CurrentRegexp.DebugPrint()
-
 	return scope.CurrentRegexp, scope, err
 }
 
