@@ -64,10 +64,9 @@ Alias: Word Boundary
 	globalAst.Append(ast)
 
 	//output, scope, err := CompileExpression(*ast.Children()[1], Scope{})
-	output, scope, err := CompileRoot(*globalAst)
+	output, _, err := CompileRoot(*globalAst)
 	if err != nil {
 		t.Errorf("Error parsing:\n\t%s\n", err)
 	}
 	fmt.Printf("Output:\n%s\n", output)
-	scope.DebugPrint()
 }

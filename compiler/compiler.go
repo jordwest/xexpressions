@@ -37,8 +37,6 @@ func CompileExpression(node lexer.ASTNode, scope Scope) (output string, parentSc
 	scope.Examples = make([]Example, 0)
 	output, scope, err = compileNodeChildren(node, scope)
 
-	fmt.Printf("Examples: %d\n", scope.Examples)
-
 	// Run tests on the examples
 	for _, example := range scope.Examples {
 		pass := example.Run(output)
