@@ -7,15 +7,32 @@ import (
 	"github.com/jordwest/xexpressions/lexer"
 )
 
-func CompileRoot(node lexer.ASTNode) (output string, scope Scope, err error) {
+func CompileRoot(node lexer.ASTNode) (regexps []Regexp, scope Scope, err error) {
 	if !node.IsCommandType(0) {
 		panic("Expecting root node")
 	}
 
-	scope = NewScope()
-	output, scope, err = compileNodeChildren(node, scope)
+	regexps = make([]Regexp, 0)
 
-	return output, scope, err
+	scope = NewScope()
+	for _, child := range node.Children() {
+
+		command := child.Command()
+		switch command.Type {
+		case lexer.CmdAliasDefinition:
+			if scope, err = DefineAlias(*child, scope); err != nil {
+				return regexps, scope, err
+			}
+		case lexer.CmdXExpression:
+			regexp, scope, err := CompileExpression(*child, scope)
+			if err != nil {
+				return regexps, scope, err
+			}
+			regexps = append(regexps, regexp)
+		}
+	}
+
+	return regexps, scope, err
 }
 
 func DefineAlias(node lexer.ASTNode, scope Scope) (parentScope Scope, err error) {
@@ -28,17 +45,19 @@ func DefineAlias(node lexer.ASTNode, scope Scope) (parentScope Scope, err error)
 	return scope, nil
 }
 
-func CompileExpression(node lexer.ASTNode, scope Scope) (output string, parentScope Scope, err error) {
+func CompileExpression(node lexer.ASTNode, scope Scope) (regexp Regexp, parentScope Scope, err error) {
+	output := ""
+
 	if !node.IsCommandType(lexer.CmdXExpression) {
 		panic("Compile should be passed an XExpression node only")
 	}
 
 	// List of examples should be isolated in this expression's scope
-	scope.Examples = make([]Example, 0)
+	scope.CurrentRegexp = NewRegexp()
 	output, scope, err = compileNodeChildren(node, scope)
 
 	// Run tests on the examples
-	for _, example := range scope.Examples {
+	for _, example := range scope.CurrentRegexp.Examples {
 		pass := example.Run(output)
 		if pass {
 			fmt.Printf(" ✔ Match test passed on %s\n", example.Line.String())
@@ -47,7 +66,11 @@ func CompileExpression(node lexer.ASTNode, scope Scope) (output string, parentSc
 		}
 	}
 
-	return output, scope, err
+	scope.CurrentRegexp.RegexpText = output
+
+	scope.CurrentRegexp.DebugPrint()
+
+	return scope.CurrentRegexp, scope, err
 }
 
 func compileGroup(node lexer.ASTNode, scope Scope) (output string, parentScope Scope, err error) {
@@ -75,19 +98,8 @@ func compileNodeChildren(node lexer.ASTNode, scope Scope) (output string, parent
 		childOutput := ""
 
 		switch child.Command().Type {
-		case lexer.CmdXExpression:
-			var expressionOutput string
-			expressionOutput, scope, err = CompileExpression(*child, scope)
-			if err != nil {
-				return "", scope, err
-			}
-			childOutput = fmt.Sprintf("/%s/\n", expressionOutput)
 		case lexer.CmdLiteral:
 			childOutput = child.Command().Value
-		case lexer.CmdAliasDefinition:
-			if scope, err = DefineAlias(*child, scope); err != nil {
-				return "", scope, err
-			}
 		case lexer.CmdAliasCall:
 			if childOutput, err = callAlias((*child).Command().Value, scope); err != nil {
 				return "", scope, child.Line().Error(err.Error())
@@ -143,9 +155,9 @@ func compileExamples(node lexer.ASTNode, scope Scope) (output string, parentScop
 		command := child.Command()
 		switch command.Type {
 		case lexer.CmdExampleMatch:
-			scope.Examples = append(scope.Examples, NewExample(true, command.Comment, child.Line()))
+			scope.CurrentRegexp.Examples = append(scope.CurrentRegexp.Examples, NewExample(true, command.Comment, child.Line()))
 		case lexer.CmdExampleNonMatch:
-			scope.Examples = append(scope.Examples, NewExample(false, command.Comment, child.Line()))
+			scope.CurrentRegexp.Examples = append(scope.CurrentRegexp.Examples, NewExample(false, command.Comment, child.Line()))
 		}
 	}
 
@@ -157,9 +169,6 @@ func callAlias(aliasName string, scope Scope) (output string, err error) {
 	if !ok {
 		return "", fmt.Errorf("Cannot find alias with name %s", aliasName)
 	}
-
-	// List of alias examples should be isolated inside the alias scope
-	scope.Examples = make([]Example, 0)
 
 	// The scope should be private to the alias call - nothing inside the alias
 	// can affect the parent scope

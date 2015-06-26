@@ -7,17 +7,17 @@ import (
 )
 
 type Scope struct {
-	Aliases  map[string]lexer.ASTNode
-	Examples []Example
+	Aliases       map[string]lexer.ASTNode
+	CurrentRegexp Regexp
 }
 
 func NewScope() (newScope Scope) {
 	newScope.Aliases = make(map[string]lexer.ASTNode)
-	newScope.Examples = make([]Example, 0)
+	newScope.CurrentRegexp = NewRegexp()
 	return newScope
 }
 
 func (s Scope) DebugPrint() {
 	fmt.Printf("Scope has %d aliases:\n\t%+v", len(s.Aliases), s.Aliases)
-	fmt.Printf("Scope has %d examples:\n\t%+v", len(s.Examples), s.Examples)
+	s.CurrentRegexp.DebugPrint()
 }
