@@ -8,6 +8,7 @@ import (
 type Command struct {
 	Type    CommandType
 	Value   string
+	Params  string
 	Comment string
 }
 
@@ -26,13 +27,14 @@ const (
 	CmdGroup
 	CmdSelect
 	CmdCase
+	CmdRepeat
 )
 
 var CommandRegexp *regexp.Regexp
 var LiteralRegexp *regexp.Regexp
 
 func init() {
-	CommandRegexp = regexp.MustCompile("^([A-z0-9\\s]+)(?:\\:(?:\\s(.+))?)?$")
+	CommandRegexp = regexp.MustCompile("^([A-Za-z0-9\\s]+)(?:\\[(.+)\\])?(?:\\:(?:\\s(.+))?)?$")
 	LiteralRegexp = regexp.MustCompile("^\\'(.+)\\'(?:\\:\\s(.+))?$")
 }
 
@@ -50,11 +52,12 @@ func CommandFromText(text string) (command Command, err error) {
 
 	match = CommandRegexp.FindStringSubmatch(text)
 
-	if len(match) != 3 {
+	if len(match) != 4 {
 		return Command{}, fmt.Errorf("Invalid command syntax: %s", text)
 	}
 
-	command.Comment = match[2]
+	command.Params = match[2]
+	command.Comment = match[3]
 
 	switch match[1] {
 	case "XExpression":
@@ -73,6 +76,8 @@ func CommandFromText(text string) (command Command, err error) {
 		command.Type = CmdSelect
 	case "Case":
 		command.Type = CmdCase
+	case "Group":
+		command.Type = CmdGroup
 	default:
 		command.Type = CmdAliasCall
 		command.Value = match[1]

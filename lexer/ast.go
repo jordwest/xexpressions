@@ -29,14 +29,24 @@ func (n *ASTNode) CreateChild() *ASTNode {
 	return newChild
 }
 
+func (n *ASTNode) Command() Command     { return n.command }
+func (n *ASTNode) Line() Line           { return n.line }
+func (n *ASTNode) Children() []*ASTNode { return n.children }
+func (n *ASTNode) Parent() *ASTNode     { return n.parent }
+
 func (n *ASTNode) DebugPrint(prependLine string) {
 	if n.parent == nil {
 		fmt.Printf("%sROOT NODE -- %d children\n", prependLine, len(n.children))
 	} else {
-		fmt.Printf("%sCMD %d -- Order: %d, Value: %s, Comment: %s, %d children\n", prependLine, n.command.Type, n.order, n.command.Value, n.command.Comment, len(n.children))
+		fmt.Printf("%sCMD %d -- Order: %d, Value: %s, Params: %s, Comment: %s, %d children\n", prependLine, n.command.Type, n.order, n.command.Value, n.command.Params, n.command.Comment, len(n.children))
 	}
 
 	for _, child := range n.children {
 		child.DebugPrint(prependLine + "\t")
 	}
+}
+
+// IsCommandType confirms whether this node is a command of a certain type
+func (n *ASTNode) IsCommandType(commandType CommandType) bool {
+	return (n.command.Type == commandType)
 }
