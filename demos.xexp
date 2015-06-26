@@ -6,7 +6,7 @@ Alias: Byte
 		Case: 200 to 249
 			'2[0-4][0-9]'
 		Case: Under 200
-			'[01]?[0-9][0-9]'
+			'[01]?[0-9]?[0-9]'
 
 XExpression: IP Address
 	Example:
@@ -14,11 +14,11 @@ XExpression: IP Address
 		Match: 192.168.000.001
 		Match: 255.255.255.000
 		Match: 018.64.001.003
-		Non Match: 192.168.0.1
-		Non Match: 10.1.1.1
-		Non Match: 127.0.0.1
+		Match: 192.168.0.1
+		Match: 10.1.1.1
+		Match: 127.0.0.1
+		Match: 0.1.5.0
 		Non Match: 360.1.5.0
-		Non Match: -0.1.5.0
 		Non Match: a.b.c.d
 		Non Match: aa.bb.00.ff
 	Word Boundary
