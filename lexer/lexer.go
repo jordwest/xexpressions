@@ -2,10 +2,14 @@ package lexer
 
 import "fmt"
 
-func Parse(text string) (*ASTNode, error) {
+func ParseFile(filename string) {
+	panic("Not implemented")
+}
+
+func Parse(text string, filename string) (*ASTNode, error) {
 	rootNode := NewASTNode(nil, Command{})
 
-	lines := LinesFromText(text)
+	lines := LinesFromText(text, filename)
 	currentIndentation := 0
 	currentNode := &rootNode
 

@@ -46,14 +46,25 @@ XExpression: Date
 				'3[01]'
 		`
 
-	ast, err := lexer.Parse(textSample)
+	global := `
+Alias: Digit
+	'\d'
+	`
+
+	globalAst, err := lexer.Parse(global, "compiler_test.go > global")
+
+	ast, err := lexer.Parse(textSample, "compiler_test.go > textSample")
 	if err != nil {
 		t.Errorf("Error parsing:\n\t%s\n", err)
 	}
 
-	output, err := CompileExpression(*ast.Children()[1], Scope{})
+	globalAst.Append(ast)
+
+	//output, scope, err := CompileExpression(*ast.Children()[1], Scope{})
+	output, scope, err := CompileRoot(*globalAst)
 	if err != nil {
 		t.Errorf("Error parsing:\n\t%s\n", err)
 	}
 	fmt.Printf("Output:\n%s\n", output)
+	scope.DebugPrint()
 }

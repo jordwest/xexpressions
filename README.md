@@ -12,9 +12,7 @@ A few features:
  - Built-in unit testing
  - Named groups
  - Self documenting
- - Easy to reason about
  - Reuse common patterns by defining custom aliases
- - Embed regular expressions where you need them
 
 Here's an example of a regexp converted to an X-Expression.
 
@@ -62,5 +60,17 @@ Can you guess what the above regular expression is used for? How about in the fo
 					'3[01]'
 
 Which one is easier to understand? (Original example from [Regular-Expressions.info](http://www.regular-expressions.info/examples.html))
+
+This is still in a prototype state. It's the first time I've attempted to write
+any kind of compiler, and the syntax is open for debate so the language and compiler may
+change significantly. If you have a suggestion for an improvement to the syntax
+or idea for an additional feature, please post an issue.
+
+Many things need to be improved for this to be a real compiler, for example:
+
+ - [ ] Lots of tidying up and refactoring
+ - [ ] Read and parse files as a stream, instead of loading the whole thing into memory
+ - [ ] Cleaner interface for defining commands/tokens
+ - [ ] Lexer should not assume 1 line == 1 command
 
 Made in Japan @ [Open Source Cafe](http://www.osscafe.net/en/)

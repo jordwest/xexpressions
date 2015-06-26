@@ -29,6 +29,10 @@ func (n *ASTNode) CreateChild() *ASTNode {
 	return newChild
 }
 
+func (n *ASTNode) Append(node *ASTNode) {
+	n.children = append(n.children, node.children...)
+}
+
 func (n *ASTNode) Command() Command     { return n.command }
 func (n *ASTNode) Line() Line           { return n.line }
 func (n *ASTNode) Children() []*ASTNode { return n.children }
