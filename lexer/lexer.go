@@ -1,9 +1,18 @@
 package lexer
 
-import "fmt"
+import (
+	"fmt"
+	"io/ioutil"
+)
 
-func ParseFile(filename string) {
-	panic("Not implemented")
+// ParseFile converts a .xexpr file into an AST
+func ParseFile(filename string) (*ASTNode, error) {
+	data, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	return Parse(string(data), filename)
 }
 
 func Parse(text string, filename string) (*ASTNode, error) {

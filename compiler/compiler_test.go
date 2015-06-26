@@ -53,7 +53,8 @@ Alias: Digit
 
 	globalAst, err := lexer.Parse(global, "compiler_test.go > global")
 
-	ast, err := lexer.Parse(textSample, "compiler_test.go > textSample")
+	_, err = lexer.Parse(textSample, "compiler_test.go > textSample")
+	ast, err := lexer.ParseFile("../demos.xexp")
 	if err != nil {
 		t.Errorf("Error parsing:\n\t%s\n", err)
 	}
