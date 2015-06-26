@@ -80,6 +80,9 @@ func compileNodeChildren(node lexer.ASTNode, scope Scope) (output string, parent
 		case lexer.CmdXExpression:
 			var expressionOutput string
 			expressionOutput, scope, err = CompileExpression(*child, scope)
+			if err != nil {
+				return "", scope, err
+			}
 			childOutput = fmt.Sprintf("/%s/\n", expressionOutput)
 		case lexer.CmdLiteral:
 			childOutput = child.Command().Value
