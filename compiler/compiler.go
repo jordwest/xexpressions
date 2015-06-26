@@ -56,6 +56,9 @@ func CompileExpression(node lexer.ASTNode, scope Scope) (regexp Regexp, parentSc
 	scope.CurrentRegexp = NewRegexp()
 	output, scope, err = compileNodeChildren(node, scope)
 
+	// The name of the regexp is the comment on the XExpression command
+	scope.CurrentRegexp.TextName = node.Command().Comment
+
 	// Run tests on the examples
 	for _, example := range scope.CurrentRegexp.Examples {
 		pass := example.Run(output)
@@ -97,11 +100,14 @@ func compileNodeChildren(node lexer.ASTNode, scope Scope) (output string, parent
 	for _, child := range node.Children() {
 		childOutput := ""
 
+		command := child.Command()
 		switch child.Command().Type {
+		case lexer.CmdDescription:
+			scope.CurrentRegexp.Description = command.Comment
 		case lexer.CmdLiteral:
-			childOutput = child.Command().Value
+			childOutput = command.Value
 		case lexer.CmdAliasCall:
-			if childOutput, err = callAlias((*child).Command().Value, scope); err != nil {
+			if childOutput, err = callAlias(command.Value, scope); err != nil {
 				return "", scope, child.Line().Error(err.Error())
 			}
 		case lexer.CmdGroup:
