@@ -54,7 +54,7 @@ XExpression: Date
 		t.Errorf("Error parsing:\n\t%s\n", err)
 	}
 
-	ast.Append(demos)
+	ast.Include(demos)
 
 	//output, scope, err := CompileExpression(*ast.Children()[1], Scope{})
 	output, _, err := CompileRoot(*ast)

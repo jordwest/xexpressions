@@ -29,7 +29,7 @@ func (n *ASTNode) CreateChild() *ASTNode {
 	return newChild
 }
 
-func (n *ASTNode) Append(node *ASTNode) {
+func (n *ASTNode) Include(node *ASTNode) {
 	n.children = append(n.children, node.children...)
 }
 
