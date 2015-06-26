@@ -49,6 +49,8 @@ XExpression: Date
 	global := `
 Alias: Digit
 	'\d'
+Alias: Word Boundary
+	'\b'
 	`
 
 	globalAst, err := lexer.Parse(global, "compiler_test.go > global")
