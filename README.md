@@ -65,6 +65,23 @@ Which one is easier to understand? (Original example from [Regular-Expressions.i
 Getting Started
 ---------------
 
+### Mac OSX (64-bit)
+
+Download the release from [https://github.com/jordwest/xexpressions/releases/tag/v0.1](https://github.com/jordwest/xexpressions/releases/tag/v0.1)
+
+Extract the zip file, then open up a terminal and run:
+
+	./xexpressions -template="example/templates/javascript.js" example/common.xexpr example/demos.xexpr > demos.js
+
+If you want to use X-Expressions in your project, simply copy the `example`
+directory to your project source. It might also be a good idea to place the
+`xexpressions` binary somewhere on your `PATH`, like `/usr/local/bin` so that
+you can compile from anywhere.
+
+### Other platforms
+
+Binaries for other platforms coming soon... until then see below
+
 ### Installing from source
 
 Once you have golang installed, install this package with `go get`:
@@ -73,7 +90,7 @@ Once you have golang installed, install this package with `go get`:
 
 Copy the `example` file into your project, then:
 
-  cd example
+	cd example
 	xexpressions -template="templates/javascript.js" common.xexpr demos.xexpr > demos.js
 
 Syntax Overview
