@@ -22,7 +22,13 @@ func WriteRegexps(re []compiler.Regexp, templateFilename string, outputFile io.W
 	if err != nil {
 		return err
 	}
-	tmpl, err := template.New("output").Funcs(template.FuncMap{"Line": Underline}).Parse(string(data))
+	tmpl, err := template.New("output").Funcs(template.FuncMap{
+		"Line":           Underline,
+		"UpperCamelCase": UpperCamelCase,
+		"LowerCamelCase": LowerCamelCase,
+		"UpperCase":      UpperCase,
+		"LowerCase":      LowerCase,
+	}).Parse(string(data))
 	if err != nil {
 		return err
 	}
@@ -61,7 +67,25 @@ func LowerCamelCase(text string) string {
 	for idx, val := range chunks {
 		if idx > 0 {
 			chunks[idx] = strings.Title(val)
+		} else {
+			chunks[idx] = strings.ToLower(val)
 		}
 	}
 	return strings.Join(chunks, "")
+}
+
+func LowerCase(text string) string {
+	chunks := wordRegexp.FindAllString(text, -1)
+	for idx, val := range chunks {
+		chunks[idx] = strings.ToLower(val)
+	}
+	return strings.Join(chunks, "_")
+}
+
+func UpperCase(text string) string {
+	chunks := wordRegexp.FindAllString(text, -1)
+	for idx, val := range chunks {
+		chunks[idx] = strings.ToUpper(val)
+	}
+	return strings.Join(chunks, "_")
 }
