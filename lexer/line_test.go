@@ -15,5 +15,5 @@ XExpression: Date
 	'20[0-9][0-9]'
 		`
 
-	fmt.Printf("Lines:\n %+v\n", LinesFromText(textSample))
+	fmt.Printf("Lines:\n %+v\n", LinesFromText(textSample, "test"))
 }

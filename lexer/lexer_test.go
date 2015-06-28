@@ -41,7 +41,7 @@ XExpression: Date
 				'3[01]'
 		`
 
-	ast, err := Parse(textSample)
+	ast, err := Parse(textSample, "test")
 	if err != nil {
 		t.Errorf("Error parsing:\n\t%s\n", err)
 	}

@@ -9,12 +9,12 @@ import (
 )
 
 func TestWriteJavascript(t *testing.T) {
-	ast, err := lexer.ParseFile("../compiler/builtin.xexpr")
+	ast, err := lexer.ParseFile("../example/common.xexpr")
 	if err != nil {
 		t.Errorf("Error parsing:\n\t%s\n", err)
 	}
 
-	demos, err := lexer.ParseFile("../demos.xexp")
+	demos, err := lexer.ParseFile("../example/demos.xexpr")
 	if err != nil {
 		t.Errorf("Error parsing:\n\t%s\n", err)
 	}
@@ -26,6 +26,6 @@ func TestWriteJavascript(t *testing.T) {
 		t.Errorf("Error parsing:\n\t%s\n", err)
 	}
 
-	err = WriteRegexps(output, "../templates/javascript.js", os.Stdout)
+	err = WriteRegexps(output, "../example/templates/javascript.js", os.Stdout)
 
 }

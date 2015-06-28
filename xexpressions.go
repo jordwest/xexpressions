@@ -13,7 +13,7 @@ import (
 var templateFile string
 
 func init() {
-	flag.StringVar(&templateFile, "template", "./templates/javascript.js", "Specify the template used to output the regular expressions")
+	flag.StringVar(&templateFile, "template", "", "Specify the template used to output the regular expressions")
 	flag.Parse()
 }
 
@@ -23,11 +23,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	ast, err := lexer.ParseFile("./compiler/builtin.xexpr")
-	if err != nil {
-		fmt.Printf("Error parsing builtins\n\t%s\n", err)
-		os.Exit(2)
+	if templateFile == "" {
+		fmt.Printf("Please specify the template file to use. Eg: -template=\"templates/javascript.js\"\n")
+		os.Exit(1)
 	}
+
+	ast := lexer.NewASTNode(nil, lexer.Command{})
 
 	// Parse each of the files provided on the command line
 	for _, file := range flag.Args() {

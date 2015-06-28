@@ -1,6 +1,0 @@
-Comment: This file contains built-in aliases which are global to all X-Expressions
-
-Alias: Digit
-	'\d'
-Alias: Word Boundary
-	'\b'

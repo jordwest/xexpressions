@@ -1,0 +1,6 @@
+Comment: This file contains common aliases for use in any X-Expression
+
+Alias: Digit
+	'\d'
+Alias: Word Boundary
+	'\b'
