@@ -48,4 +48,8 @@ func main() {
 
 	// Execute the template and send output to Stdout
 	err = writer.WriteRegexps(regularExpressions, templateFile, os.Stdout)
+	if err != nil {
+		fmt.Printf("Output error\n\t%s\n", err)
+		os.Exit(2)
+	}
 }

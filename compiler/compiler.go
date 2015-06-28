@@ -3,6 +3,7 @@ package compiler
 import (
 	"fmt"
 	"os"
+	"regexp/syntax"
 	"strings"
 
 	"github.com/jordwest/xexpressions/lexer"
@@ -81,14 +82,16 @@ func compileGroup(node lexer.ASTNode, scope Scope) (output string, parentScope S
 		panic("Expected Group node")
 	}
 
-	childOutput, scope, err := compileNodeChildren(node, scope)
-	if err != nil {
-		return "", scope, err
-	}
-
 	preventCapture := "?:"
 	if node.Command().Params == "Capture" {
 		preventCapture = ""
+
+		scope.CurrentRegexp.AddCaptureGroup(node.Command().Comment, "")
+	}
+
+	childOutput, scope, err := compileNodeChildren(node, scope)
+	if err != nil {
+		return "", scope, err
 	}
 
 	output = fmt.Sprintf("(%s%s)", preventCapture, childOutput)
@@ -105,7 +108,9 @@ func compileNodeChildren(node lexer.ASTNode, scope Scope) (output string, parent
 		case lexer.CmdDescription:
 			scope.CurrentRegexp.Description = command.Comment
 		case lexer.CmdLiteral:
-			childOutput = command.Value
+			if childOutput, scope, err = compileLiteral(*child, scope); err != nil {
+				return "", scope, child.Line().Error(err.Error())
+			}
 		case lexer.CmdAliasCall:
 			if childOutput, err = callAlias(command.Value, scope); err != nil {
 				return "", scope, child.Line().Error(err.Error())
@@ -152,6 +157,29 @@ func compileSelect(node lexer.ASTNode, scope Scope) (output string, parentScope 
 	return output, scope, nil
 }
 
+func compileLiteral(node lexer.ASTNode, scope Scope) (output string, parentScope Scope, err error) {
+	if !node.IsCommandType(lexer.CmdLiteral) {
+		panic("Expecting literal command")
+	}
+
+	// Directly copy the regexp literal
+	output = node.Command().Value
+
+	// Scan for any capture groups in the literal and increment our reference
+	literalRegexp, err := syntax.Parse(output, syntax.Perl)
+	if err != nil {
+		return output, scope, err
+	}
+
+	numCaptureGroups := len(literalRegexp.CapNames())
+	// Don't count the full literal regexp as a capture
+	if numCaptureGroups > 1 {
+		scope.CurrentRegexp.IncrementCaptureGroup(numCaptureGroups - 1)
+	}
+
+	return output, scope, err
+}
+
 func compileExamples(node lexer.ASTNode, scope Scope) (output string, parentScope Scope, err error) {
 	if !node.IsCommandType(lexer.CmdExample) {
 		panic("Expecting example command")
@@ -176,8 +204,6 @@ func callAlias(aliasName string, scope Scope) (output string, err error) {
 		return "", fmt.Errorf("Cannot find alias with name %s", aliasName)
 	}
 
-	// The scope should be private to the alias call - nothing inside the alias
-	// can affect the parent scope
-	output, _, err = compileNodeChildren(node, scope)
+	output, scope, err = compileNodeChildren(node, scope)
 	return output, err
 }

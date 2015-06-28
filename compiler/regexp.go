@@ -17,6 +17,8 @@ type Regexp struct {
 	CaptureGroups []CaptureGroup // A list of the named capture groups in the regular expression
 	Examples      []Example      // A list of the examples for this regexp
 	Source        string         // The location of the original definition
+
+	groupIndex int
 }
 
 func NewRegexp() Regexp {
@@ -24,6 +26,19 @@ func NewRegexp() Regexp {
 		CaptureGroups: make([]CaptureGroup, 0),
 		Examples:      make([]Example, 0),
 	}
+}
+
+func (re *Regexp) AddCaptureGroup(name string, description string) {
+	re.groupIndex++
+	re.CaptureGroups = append(re.CaptureGroups, CaptureGroup{
+		Name:        name,
+		Description: description,
+		Index:       re.groupIndex,
+	})
+}
+
+func (re *Regexp) IncrementCaptureGroup(increment int) {
+	re.groupIndex += increment
 }
 
 func (re Regexp) DebugPrint() {
