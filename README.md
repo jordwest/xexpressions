@@ -13,6 +13,7 @@ A few features:
  - Named groups
  - Self documenting
  - Reuse common patterns by defining custom aliases
+ - Write your regular expressions in one place, compile to multiple languages
 
 Here's an example of a regexp converted to an X-Expression.
 
@@ -61,7 +62,38 @@ Can you guess what the above regular expression is used for? How about in the fo
 
 Which one is easier to understand? (Original example from [Regular-Expressions.info](http://www.regular-expressions.info/examples.html))
 
-This is still in a prototype state. It's the first time I've attempted to write
+Getting Started
+---------------
+
+### Installing from source
+
+Once you have golang installed, install this package with `go get`:
+
+	go get github.com/jordwest/xexpressions
+
+Copy the `example` file into your project, then:
+
+  cd example
+	xexpressions -template="templates/javascript.js" common.xexpr demos.xexpr > demos.js
+
+Syntax Overview
+---------------
+
+ - Each 'command' is in the format `CommandName[Parameters]: Comment`. Usually the comment is
+	 ignored. In some commands the comment is used, for example to define the name of
+	 the X-Expression or the name of a capture group, or to specify a test case.
+ - Insert literal regular expression text by enclosed it in 'single quotes', eg `'[A-z0-9]'`
+ - Indentation must be tabs. The compiler will ignore spaces.
+ - An `Alias` can do almost anything that an XExpression can do, except that the
+	 alias won't be output on it's own. It must be called from inside an XExpression.
+ - To call an alias, simply type out it's name.
+ - Names of aliases or X-Expressions may contain spaces.
+
+Project Status
+--------
+
+This is still in a prototype state - I wouldn't use it for any mission critical applications, but it might still be useful for creating and testing your regexps.
+It's the first time I've attempted to write
 any kind of compiler, and the syntax is open for debate so the language and compiler may
 change significantly. If you have a suggestion for an improvement to the syntax
 or idea for an additional feature, please post an issue.
