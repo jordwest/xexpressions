@@ -15,6 +15,7 @@ var wordRegexp = regexp.MustCompile("[0-9A-Za-z]+")
 
 type Pipeline struct {
 	RegularExpressions []compiler.Regexp
+	TemplateFilename   string
 }
 
 func WriteRegexps(re []compiler.Regexp, templateFilename string, outputFile io.Writer) error {
@@ -35,6 +36,7 @@ func WriteRegexps(re []compiler.Regexp, templateFilename string, outputFile io.W
 
 	pipeline := Pipeline{
 		RegularExpressions: re,
+		TemplateFilename:   templateFilename,
 	}
 
 	err = tmpl.Execute(outputFile, pipeline)
