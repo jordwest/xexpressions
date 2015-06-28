@@ -9,6 +9,9 @@ var XExpression = function(regexp) {
 
 XExpression.prototype.exec = function(text) {
   var result = this.regexp.exec(text);
+  if(result === null || result.length < 1) {
+    return null;
+  }
   var match_data = {};
   for(group_name in this.groups) {
     match_data[group_name] = result[this.groups[group_name]];
