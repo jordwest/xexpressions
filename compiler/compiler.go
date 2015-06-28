@@ -66,9 +66,9 @@ func CompileExpression(node lexer.ASTNode, scope Scope) (regexp Regexp, parentSc
 	for _, example := range scope.CurrentRegexp.Examples {
 		pass := example.Run(output)
 		if pass {
-			fmt.Fprintf(os.Stderr, " ✔ Match test passed on %s\n", example.Line.String())
+			fmt.Fprintf(os.Stderr, " ✔  Match test passed on %s\n", example.Line.String())
 		} else {
-			fmt.Fprintf(os.Stderr, " ✕ Match test failed for\n\t%s\non %s\n", example.Text, example.Line.String())
+			fmt.Fprintf(os.Stderr, " ✕  Match test failed for\n\t%s\non %s\n", example.Text, example.Line.String())
 		}
 	}
 
