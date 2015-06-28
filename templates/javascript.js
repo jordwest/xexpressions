@@ -35,10 +35,7 @@ var xExpressions = {};
   * {{.Description}}
   * Definition: {{.Source}}
   */
-xExpressions['{{.TextName}}'] = new XExpression(/{{.RegexpText}}/);
-xExpressions['{{.TextName}}']{{range .CaptureGroups}}
-  .add_capture_group({{.Index}}, '{{.Name}}'){{end}};
-/** Capture groups: {{range .CaptureGroups}}
-  * [{{.Index}}] - {{.Name}}{{end}}
-  */
+xExpressions.{{LowerCase .TextName}} = new XExpression(/{{.RegexpText}}/);
+xExpressions.{{LowerCase .TextName}}{{range .CaptureGroups}}
+  .add_capture_group({{.Index}}, '{{LowerCase .Name}}'){{end}};
 {{end}}
